@@ -17,7 +17,7 @@ self.addEventListener("fetch", fetchEvent => {
   );
 });
 
-// service-worker.js
+
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
@@ -26,6 +26,7 @@ self.addEventListener('install', function(event) {
         '/',
         'index.html',
         'css/style.css',
+         '/images/captured_image.png',
        
       ]);
     })
