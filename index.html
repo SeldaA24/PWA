@@ -43,6 +43,7 @@
     <canvas id="canvas" style="display: none;"></canvas>
 <img id="capturedImage" style="display: none;">
    <script>
+     document.addEventListener('DOMContentLoaded', function() {
       let videoStream;
    let video = document.getElementById('videoCam');
    let canvas = document.getElementById('canvas');
@@ -132,7 +133,7 @@
         console.error('Service Worker registration failed:', error);
       });
   }
-
+ });
 
 <img id="capturedImage" src="/images/captured_image.png" alt="Captured Image">
 
