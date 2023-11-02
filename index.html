@@ -74,18 +74,25 @@
             console.log(e.name + ": " + e.message);
          });
       }
-     function captureImage(){
-      if(videoStream) {
-         canvas.width = video.videoWidth;
-         canvas.height = video.videoHeight;
-         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-         const imgDataUrl = canvas.toDataURL('image/png');
-         capturedImage.src = canvas.toDataURL('image/png');
-         capturedImage.style.display = 'block';
+     function captureImage() {
+  if (videoStream) {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imgDataUrl = canvas.toDataURL('image/png');
+    capturedImage.src = imgDataUrl;
+    capturedImage.style.display = 'block';
 
-        // Speichern
-        sessionStorage.setItem('capturedImage', imgDataUrl);
-      }}
+    // Im Local Storage speichern
+    localStorage.setItem('capturedImage', imgDataUrl);
+
+    // Im Cache speichern
+    caches.open('my-cache').then(function (cache) {
+      cache.put('/images/captured_image.png', new Response(imgDataUrl));
+    });
+  }
+}
+
 
  function stopCam(){
         if(videoStream) {
