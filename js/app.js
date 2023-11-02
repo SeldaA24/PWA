@@ -59,36 +59,7 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker
      .register("./serviceWorker.js", { scope: "./" })
 
-
       .then(res => console.log("service worker registered"))
       .catch(err => console.log("service worker not registered", err));
   });
 }
-const installIcon = document.createElement("div");
-installIcon.innerHTML = "&#x2192; Install App"; 
-
-
-installIcon.style.position = "fixed";
-installIcon.style.bottom = "20px";
-installIcon.style.right = "20px";
-installIcon.style.background = "blue";
-installIcon.style.color = "white";
-installIcon.style.padding = "10px";
-installIcon.style.borderRadius = "50%";
-installIcon.style.cursor = "pointer";
-
-
-document.body.appendChild(installIcon);
-installIcon.addEventListener("click", () => {
-  if ("serviceWorker" in navigator && deferredPrompt) {
-    
-    deferredPrompt.prompt();
-   
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("Die App wurde installiert.");
-      }
-      deferredPrompt = null;
-    });
-  }
-}); 
