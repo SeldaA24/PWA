@@ -22,11 +22,7 @@ self.addEventListener("fetch", fetchEvent => {
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open('my-cache').then(function(cache) {
-      return cache.addAll([
-        '/',
-        'index.html',
-        'css/style.css',
-         '/images/captured_image.png',
+    return cache.addAll(['/images/captured_image.png']);
        
       ]);
     })
