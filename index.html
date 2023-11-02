@@ -35,7 +35,9 @@
    <h1>Open WebCam Using JavaScript</h1>
    <br/>
    <button id="startBtn" onclick="openCam()">Open Webcam</button>
-    <button id="captureBtn" onclick="captureImage()">Bild Aufnehmen</button>
+    <button id="captureBtn" onclick="captureImage()">Take picture</button>
+     <button id="stopBtn" onclick="stopCam()">Stop Webcam</button>
+   <button id="downloadBtn" onclick="downloadImage()">Save picture</button>
    <br/><br/>
    <video id="videoCam"></video>
     <canvas id="canvas" style="display: none;"></canvas>
@@ -65,7 +67,7 @@
             }
             video.onloadedmetadata = function(e) {
                video.play();
-            };
+            }; // Video als Bild gespeicehrt
            videoStream = vidStream;
          })
          .catch(function(e) {
@@ -84,6 +86,25 @@
         // Speichern
         sessionStorage.setItem('capturedImage', imgDataUrl);
       }}
+
+ function stopCam(){
+        if(videoStream) {
+           const tracks = videoStream.getTracks();
+           tracks.forEach(track => track.stop());
+           videoStream = null;
+        }
+     }
+
+ function downloadImage() {
+        if (capturedImage.src) {
+           const a = document.createElement('a');
+           a.href = capturedImage.src;
+           a.download = 'captured_image.png';
+           a.click();
+        }
+     }
+
+     
    </script>
   </body>
 </html>
