@@ -32,112 +32,101 @@
       <div class="container"></div>
     </main>
     <script src="js/app.js"></script>
-   <h1>Open WebCam Using JavaScript</h1>
-   <br/>
-   <button id="startBtn" onclick="openCam()">Open Webcam</button>
+    <h1>Open WebCam Using JavaScript</h1>
+    <br/>
+    <button id="startBtn" onclick="openCam()">Open Webcam</button>
     <button id="captureBtn" onclick="captureImage()">Take picture</button>
-     <button id="stopBtn" onclick="stopCam()">Stop Webcam</button>
-   <button id="downloadBtn" onclick="downloadImage()">Save picture</button>
-   <br/><br/>
-   <video id="videoCam"></video>
+    <button id="stopBtn" onclick="stopCam()">Stop Webcam</button>
+    <button id="downloadBtn" onclick="downloadImage()">Save picture</button>
+    <br/><br/>
+    <video id="videoCam"></video>
     <canvas id="canvas" style="display: none;"></canvas>
-<img id="capturedImage" style="display: none;">
-   <script>
-     document.addEventListener('DOMContentLoaded', function() {
-      let videoStream;
-   let video = document.getElementById('videoCam');
-   let canvas = document.getElementById('canvas');
-   let capturedImage = document.getElementById('capturedImage');
+    <img id="capturedImage" style="display: none;">
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        let videoStream;
+        let video = document.getElementById('videoCam');
+        let canvas = document.getElementById('canvas');
+        let capturedImage = document.getElementById('capturedImage');
 
-      function openCam(){
-         let All_mediaDevices=navigator.mediaDevices
-         if (!All_mediaDevices || !All_mediaDevices.getUserMedia) {
+        function openCam(){
+          let All_mediaDevices = navigator.mediaDevices;
+          if (!All_mediaDevices || !All_mediaDevices.getUserMedia) {
             console.log("getUserMedia() not supported.");
             return;
-         }
-         All_mediaDevices.getUserMedia({
+          }
+          All_mediaDevices.getUserMedia({
             audio: true,
             video: true
-         })
-         .then(function(vidStream) {
-            var video = document.getElementById('videoCam');
+          })
+          .then(function(vidStream) {
             if ("srcObject" in video) {
-               video.srcObject = vidStream;
+              video.srcObject = vidStream;
             } else {
-               video.src = window.URL.createObjectURL(vidStream);
+              video.src = window.URL.createObjectURL(vidStream);
             }
             video.onloadedmetadata = function(e) {
-               video.play();
-            }; // Video als Bild gespeicehrt
-           videoStream = vidStream;
-         })
-         .catch(function(e) {
+              video.play();
+            };
+            videoStream = vidStream;
+          })
+          .catch(function(e) {
             console.log(e.name + ": " + e.message);
-         });
-      }
-     function captureImage(){
-      if(videoStream) {
-         canvas.width = video.videoWidth;
-         canvas.height = video.videoHeight;
-         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-         const imgDataUrl = canvas.toDataURL('image/png');
-         capturedImage.src = canvas.toDataURL('image/png');
-         capturedImage.style.display = 'block';
-
-        // Speichern
-        sessionStorage.setItem('capturedImage', imgDataUrl);
-      }}
-
- function stopCam(){
-        if(videoStream) {
-           const tracks = videoStream.getTracks();
-           tracks.forEach(track => track.stop());
-           videoStream = null;
+          });
         }
-     }
 
- function downloadImage() {
-        if (capturedImage.src) {
-           const a = document.createElement('a');
-           a.href = capturedImage.src;
-           a.download = 'captured_image.png';
-           a.click();
-        }
-     }
+        function captureImage(){
+          if(videoStream) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgDataUrl = canvas.toDataURL('image/png');
+            capturedImage.src = canvas.toDataURL('image/png');
+            capturedImage.style.display = 'block';
 
-     if ('caches' in window) {
-    caches.match('/images/captured_image.png')
-      .then(function (response) {
-        if (response) {
-          return response.blob();
+            // Speichern
+            sessionStorage.setItem('capturedImage', imgDataUrl);
+          }
         }
-      })
-      .then(function (blob) {
-        if (blob) {
-          const img = document.getElementById('capturedImage');
-          img.src = URL.createObjectURL(blob);
-          img.style.display = 'block';
+
+        function stopCam(){
+          if(videoStream) {
+            const tracks = videoStream.getTracks();
+            tracks.forEach(track => track.stop());
+            videoStream = null;
+          }
         }
-      })
-      .catch(function (error) {
-        console.error('Fehler beim Laden des Bildes aus dem Cache:', error);
+
+        function downloadImage() {
+          if (capturedImage.src) {
+            const a = document.createElement('a');
+            a.href = capturedImage.src;
+            a.download = 'captured_image.png';
+            a.click();
+          }
+        }
+
+        if ('caches' in window) {
+          caches.match('/images/captured_image.png')
+            .then(function (response) {
+              if (response) {
+                return response.blob();
+              }
+            })
+            .then(function (blob) {
+              if (blob) {
+                const img = document.getElementById('capturedImage');
+                img.src = URL.createObjectURL(blob);
+                img.style.display = 'block';
+              }
+            })
+            .catch(function (error) {
+              console.error('Fehler beim Laden des Bildes aus dem Cache:', error);
+            });
+        }
+
       });
-  }
-  
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/serviceWorker.js')
-      .then(function(registration) {
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch(function(error) {
-        console.error('Service Worker registration failed:', error);
-      });
-  }
- 
 
-<img id="capturedImage" src="/images/captured_image.png" alt="Captured Image">
-
-     
-   </script>
+    </script>
   </body>
 </html>
