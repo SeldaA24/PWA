@@ -62,6 +62,21 @@ if ("serviceWorker" in navigator) {
       .catch(err => console.log("service worker not registered", err));
   });
 }
+
+const installIcon = document.createElement("div");
+installIcon.innerHTML = "&#x2192; Install App";
+
+installIcon.style.position = "fixed";
+installIcon.style.bottom = "20px";
+installIcon.style.right = "20px";
+installIcon.style.background = "blue";
+installIcon.style.color = "white";
+installIcon.style.padding = "10px";
+installIcon.style.borderRadius = "50%";
+installIcon.style.cursor = "pointer";
+
+document.body.appendChild(installIcon);
+
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (event) => {
