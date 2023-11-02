@@ -104,6 +104,24 @@
         }
      }
 
+     if ('caches' in window) {
+    caches.match('/images/captured_image.png')
+      .then(function (response) {
+        if (response) {
+          return response.blob();
+        }
+      })
+      .then(function (blob) {
+        if (blob) {
+          const img = document.getElementById('capturedImage');
+          img.src = URL.createObjectURL(blob);
+          img.style.display = 'block';
+        }
+      })
+      .catch(function (error) {
+        console.error('Fehler beim Laden des Bildes aus dem Cache:', error);
+      });
+  }
   
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js')
