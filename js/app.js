@@ -1,5 +1,13 @@
 const installIcon = document.createElement("div");
 installIcon.innerHTML = "&#x2192; Install App";
+
+installIcon.style.position = "fixed";
+installIcon.style.bottom = "20px";
+installIcon.style.right = "20px";
+installIcon.style.background = "blue";
+installIcon.style.color = "white";const installIcon = document.createElement("div");
+installIcon.innerHTML = "&#x2192; Install App";
+
 installIcon.style.position = "fixed";
 installIcon.style.bottom = "20px";
 installIcon.style.right = "20px";
@@ -8,6 +16,7 @@ installIcon.style.color = "white";
 installIcon.style.padding = "10px";
 installIcon.style.borderRadius = "50%";
 installIcon.style.cursor = "pointer";
+
 document.body.appendChild(installIcon);
 
 const container = document.querySelector(".container");
@@ -29,11 +38,11 @@ const coffees = [
     image: "images/coffee4.jpg"
   },
   {
-    name: "Beatae",
+    name: " Beatae",
     image: "images/coffee5.jpg"
   },
   {
-    name: "Vitae",
+    name: " Vitae",
     image: "images/coffee6.jpg"
   },
   {
@@ -49,18 +58,18 @@ const coffees = [
     image: "images/coffee9.jpg"
   }
 ];
-
 const showCoffees = () => {
   let output = "";
-  coffees.forEach(({ name, image }) => {
-    output += `
-      <div class="card">
-        <img class="card--avatar" src=${image} />
-        <h1 class="card--title">${name}</h1>
-        <a class="card--link" href="#">Taste</a>
-      </div>
-    `;
-  });
+  coffees.forEach(
+    ({ name, image }) =>
+      (output += `
+              <div class="card">
+                <img class="card--avatar" src=${image} />
+                <h1 class="card--title">${name}</h1>
+                <a class="card--link" href="#">Taste</a>
+              </div>
+              `)
+  );
   container.innerHTML = output;
 };
 
@@ -70,16 +79,21 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", function() {
     navigator.serviceWorker
       .register("/serviceWorker.js")
-      .then(res => console.log("Service worker registered"))
-      .catch(err => console.log("Service worker not registered", err));
+      .then(res => console.log("service worker registered"))
+      .catch(err => console.log("service worker not registered", err));
   });
 }
+
+
 
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (event) => {
+ 
   event.preventDefault();
   deferredPrompt = event;
+
+  
   installIcon.style.display = "block";
 });
 
@@ -92,7 +106,24 @@ installIcon.addEventListener("click", () => {
         console.log("Die App wurde installiert.");
       }
       deferredPrompt = null;
-      installIcon.style.display = "none";
+      installIcon.style.display = "none"; 
     });
   }
-};
+});
+
+
+window.addEventListener("appinstalled", (event) => {
+  installIcon.style.display = "none";
+});
+installIcon.style.padding = "10px";
+installIcon.style.borderRadius = "50%";
+installIcon.style.cursor = "pointer";
+
+document.body.appendChild(installIcon);
+
+
+
+
+    });
+  }
+});
