@@ -66,6 +66,7 @@
             video.onloadedmetadata = function(e) {
                video.play();
             };
+           videoStream = vidStream;
          })
          .catch(function(e) {
             console.log(e.name + ": " + e.message);
@@ -76,8 +77,12 @@
          canvas.width = video.videoWidth;
          canvas.height = video.videoHeight;
          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+         const imgDataUrl = canvas.toDataURL('image/png');
          capturedImage.src = canvas.toDataURL('image/png');
          capturedImage.style.display = 'block';
+
+        // Speichern
+        sessionStorage.setItem('capturedImage', imgDataUrl);
       }}
    </script>
   </body>
