@@ -66,7 +66,8 @@ if ("serviceWorker" in navigator) {
 
 
 
-      let videoStream;
+
+    /*  let videoStream;
    let video = document.getElementById('videoCam');
    let canvas = document.getElementById('canvas');
    let capturedImage = document.getElementById('capturedImage');
@@ -175,4 +176,12 @@ function captureImage(){
     });
   }
 }
+*/
 
+
+
+
+
+<button id="askButton">Ask for location</button>
+
+<div id="target"></div>
