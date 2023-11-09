@@ -67,7 +67,7 @@ if ("serviceWorker" in navigator) {
 
 
 
-    /*  let videoStream;
+  let videoStream;
    let video = document.getElementById('videoCam');
    let canvas = document.getElementById('canvas');
    let capturedImage = document.getElementById('capturedImage');
@@ -176,7 +176,7 @@ function captureImage(){
     });
   }
 }
-*/
+
 
 
 
@@ -200,3 +200,16 @@ if ('geolocation' in navigator) {
   });
 } else {
   target.innerText = 'Geolocation API not supported.';
+}
+if ('LinearAccelerationSensor' in window && 'Gyroscope' in window) {
+  document.getElementById('moApi').innerHTML = 'Generic Sensor API';
+  
+  let lastReadingTimestamp;
+  let accelerometer = new LinearAccelerationSensor();
+  accelerometer.addEventListener('reading', e => {
+    if (lastReadingTimestamp) {
+      intervalHandler(Math.round(accelerometer.timestamp - lastReadingTimestamp));
+    }
+    lastReadingTimestamp = accelerometer.timestamp
+    accelerationHandler(accelerometer, 'moAccel');
+  });
