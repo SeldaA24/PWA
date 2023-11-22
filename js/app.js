@@ -1,3 +1,4 @@
+
 /*const container = document.querySelector(".container");
 const coffees = [
   {
@@ -63,123 +64,130 @@ if ("serviceWorker" in navigator) {
   });
 } */
 
+var theStream;
+var theRecorder;
+var recordedChunks = [];
 
-
-
-
-  let videoStream;
-   let video = document.getElementById('videoCam');
-   let canvas = document.getElementById('canvas');
-   let capturedImage = document.getElementById('capturedImage');
-
-      function openCam(){
-         let All_mediaDevices=navigator.mediaDevices
-         if (!All_mediaDevices || !All_mediaDevices.getUserMedia) {
-            console.log("getUserMedia() not supported.");
-            return;
-         }
-         All_mediaDevices.getUserMedia({
-            audio: true,
-            video: true
-         })
-         .then(function(vidStream) {
-            var video = document.getElementById('videoCam');
-            if ("srcObject" in video) {
-               video.srcObject = vidStream;
-            } else {
-               video.src = window.URL.createObjectURL(vidStream);
-            }
-            video.onloadedmetadata = function(e) {
-               video.play();
-            }; // Video als Bild gespeicehrt
-           videoStream = vidStream;
-         })
-         .catch(function(e) {
-            console.log(e.name + ": " + e.message);
-         });
-      }
-     function captureImage() {
-  if (videoStream) {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('d').drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imgDataUrl = canvas.toDataURL('image/png');
-    capturedImage.src = imgDataUrl;
-    capturedImage.style.display = 'block';
-
-    // Im Local Storage speichern
-    localStorage.setItem('capturedImage', imgDataUrl);
-
-    // Im Cache speichern
-    caches.open('my-cache').then(function (cache) {
-      cache.put('/images/captured_image.png', new Response(imgDataUrl));
-    });
+// This function initializes user media
+function getUserMedia(options, successCallback, failureCallback) {
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    return navigator.mediaDevices.getUserMedia(options)
+      .then(successCallback)
+      .catch(failureCallback);
   }
+  throw new Error('User Media API not supported.');
 }
 
 
- function stopCam(){
-        if(videoStream) {
-           const tracks = videoStream.getTracks();
-           tracks.forEach(track => track.stop());
-           videoStream = null;
-        }
-     }
-
- function downloadImage() {
-        if (capturedImage.src) {
-           const a = document.createElement('a');
-           a.href = capturedImage.src;
-           a.download = 'captured_image.png';
-           a.click();
-        }
-     }
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/serviceWorker.js')
-      .then(function(registration) {
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch(function(error) {
-        console.error('Service Worker registration failed:', error);
-      });
+// This function is called to start the media stream and recording
+function getStream() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    alert('User Media API not supported.');
+    return;
   }
-     
-   
 
-const container = document.querySelector(".container");
-
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function() {
-    navigator.serviceWorker
-  .register("./serviceWorker.js", { scope: "./" })
-
-      .then(res => console.log("service worker registered"))
-      .catch(err => console.log("service worker not registered", err));
+  var constraints = { video: true, audio: true };
+  getUserMedia(constraints, function (stream) {
+    var mediaControl = document.querySelector('video');
+    
+    // Older browsers may not have srcObject
+    if ("srcObject" in mediaControl) {
+      mediaControl.srcObject = stream;
+    } else {
+      // Avoid using this in new browsers, as it is going away.
+      mediaControl.src = window.URL.createObjectURL(stream);
+    }
+    
+    theStream = stream;
+    setupRecorder(stream); // This is a new function to encapsulate the recorder setup
+  }, function (err) {
+    alert('Error: ' + err);
   });
 }
-function captureImage(){
-  if(videoStream) {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imgDataUrl = canvas.toDataURL('image/png');
-    capturedImage.src = canvas.toDataURL('image/png');
-    capturedImage.style.display = 'block';
+function setupRecorder(stream) {
+  try {
+    theRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+    theRecorder.ondataavailable = function(event) {
+      if (event.data.size > 0) {
+        recordedChunks.push(event.data);
+      }
+    };
+    theRecorder.start(100); // Collect 100ms of data chunks
+  } catch (e) {
+    console.error('Exception while creating MediaRecorder:', e);
+    return;
+  }
+  console.log('MediaRecorder created');
+}
 
-    // Speichern
-    sessionStorage.setItem('capturedImage', imgDataUrl);
+// This new function retrieves the video from the cache and downloads it.
+async function downloadFromCache() {
+  const videoKey = 'my_recorded_video.webm';  // This should match the key used when saving the video.
 
-    // Speichern Sie das Bild auch im Cache
-    caches.open('my-cache').then(function(cache) {
-      cache.put('/images/captured_image.png', new Response(imgDataUrl));
-    });
+  if (!('caches' in window)) {
+    alert('Cache API not supported!');
+    return;
+  }
+
+  try {
+    const cache = await caches.open('video-cache');
+    const cachedResponse = await cache.match(videoKey);
+    
+    if (!cachedResponse || !cachedResponse.ok) {
+      throw new Error('No cached video found!');
+    }
+
+    const blob = await cachedResponse.blob();
+    const url = window.URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'downloaded_video.webm';
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  } catch (err) {
+    console.error('Failed to download video from cache:', err);
+    alert(`Error: ${err.message}`);
   }
 }
 
 
 
+// Stops the recording and saves the video to cache
+function stopRecordingAndSaveToCache() {
+  console.log('Stopping recording and saving data');
+  theRecorder.stop();
+  theStream.getTracks().forEach(track => track.stop());
 
+  theRecorder.onstop = function() {
+    // Create a Blob from the recorded chunks
+    var blob = new Blob(recordedChunks, { type: 'video/webm' });
+    saveToCache(blob);
+  };
+}
+
+// Saves the recording Blob to the cache
+function saveToCache(blob) {
+  if ('caches' in window) {
+    const videoKey = 'my_recorded_video.webm';
+    const request = new Request(videoKey, { mode: 'no-cors' });
+    const response = new Response(blob);
+
+    caches.open('video-cache').then(cache => {
+      cache.put(request, response).then(() => {
+        console.log('Saved video to cache.');
+      }).catch(error => {
+        console.error('Failed to save video to cache:', error);
+      });
+    });
+  } else {
+    console.error('Cache API not supported');
+  }
+}
 
 var target = document.getElementById('target');
 var watchId;
@@ -261,7 +269,124 @@ function rotationHandler(rotation) {
   info = info.replace("Z", rotation.gamma && rotation.gamma.toFixed(3));
   document.getElementById("moRotation").innerHTML = info;
 }
+if ('storage' in navigator && 'estimate' in navigator.storage) {
+  navigator.storage.estimate()
+    .then(estimate => {
+      document.getElementById('usage').innerHTML = estimate.usage;
+      document.getElementById('quota').innerHTML = estimate.quota;
+      document.getElementById('percent').innerHTML = (estimate.usage * 100 / estimate.quota).toFixed(0);
+    });
+}
 
+if ('storage' in navigator && 'persisted' in navigator.storage) {
+  navigator.storage.persisted()
+    .then(persisted => {
+      document.getElementById('persisted').innerHTML = persisted ? 'persisted' : 'not persisted';
+    });
+}
+
+function requestPersistence() {
+  if ('storage' in navigator && 'persist' in navigator.storage) {
+    navigator.storage.persist()
+      .then(persisted => {
+        document.getElementById('persisted').innerHTML = persisted ? 'persisted' : 'not persisted';
+      });
+  }
+}
+if ('localStorage' in window || 'sessionStorage' in window) {
+  var selectedEngine;
+
+  var logTarget = document.getElementById('target');
+  var valueInput = document.getElementById('value');
+
+  var reloadInputValue = function () {
+  console.log(selectedEngine, window[selectedEngine].getItem('myKey'))
+    valueInput.value = window[selectedEngine].getItem('myKey') || '';
+  }
+  
+  var selectEngine = function (engine) {
+    selectedEngine = engine;
+    reloadInputValue();
+  };
+
+  function handleChange(change) {
+    var timeBadge = new Date().toTimeString().split(' ')[0];
+    var newState = document.createElement('p');
+    newState.innerHTML = '' + timeBadge + ' ' + change + '.';
+    logTarget.appendChild(newState);
+  }
+
+  var radios = document.querySelectorAll('#selectEngine input');
+  for (var i = 0; i < radios.length; ++i) {
+    radios[i].addEventListener('change', function () {
+      selectEngine(this.value)
+    });
+  }
+  
+  selectEngine('localStorage');
+
+  valueInput.addEventListener('keyup', function () {
+    window[selectedEngine].setItem('myKey', this.value);
+  });
+
+  var onStorageChanged = function (change) {
+    var engine = change.storageArea === window.localStorage ? 'localStorage' : 'sessionStorage';
+    handleChange('External change in ' + engine + ': key ' + change.key + ' changed from ' + change.oldValue + ' to ' + change.newValue + '');
+    if (engine === selectedEngine) {
+      reloadInputValue();
+    }
+  }
+
+  window.addEventListener('storage', onStorageChanged);
+}
 function intervalHandler(interval) {
   document.getElementById("moInterval").innerHTML = interval;
+}
+function getReadFile(reader, i) {
+  return function () {
+    var li = document.querySelector('[data-idx="' + i + '"]');
+
+    li.innerHTML += 'File starts with "' + reader.result.substr(0, 25) + '"';
+  }
+}
+
+function readFiles(files) {
+  document.getElementById('count').innerHTML = files.length;
+
+  var target = document.getElementById('target');
+  target.innerHTML = '';
+
+  for (var i = 0; i < files.length; ++i) {
+    var item = document.createElement('li');
+    item.setAttribute('data-idx', i);
+    var file = files[i];
+
+    var reader = new FileReader();
+    reader.addEventListener('load', getReadFile(reader, i));
+    reader.readAsText(file);
+
+    item.innerHTML = '' + file.name + ', ' + file.type + ', ' + file.size + ' bytes, last modified ' + file.lastModifiedDate + '';
+    target.appendChild(item);
+  };
+}
+
+async function writeFile() {
+  if (!window.chooseFileSystemEntries) {
+    alert('Native File System API not supported');
+    return;
+  }
+  
+  const target = document.getElementById('target');
+  target.innerHTML = 'Opening file handle...';
+  
+  const handle = await window.chooseFileSystemEntries({
+    type: 'save-file',
+  });
+  
+  const file = await handle.getFile()
+  const writer = await handle.createWriter();
+  await writer.write(0, 'Hello world from What Web Can Do!');
+  await writer.close()
+  
+  target.innerHTML = 'Test content written to ' + file.name + '.';
 }
