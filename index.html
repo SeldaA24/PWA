@@ -71,7 +71,6 @@
    <script src="js/app.js"></script> 
   </body>
 </html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -162,6 +161,11 @@
         .column {
             flex: 1;
         }
+
+        /* Added styles for button alignment */
+        .container button {
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -178,9 +182,12 @@
 
         <video poster="https://image.freepik.com/free-icon/video-camera-symbol_318-40225.png"></video>
 
-        <p><button onclick="getStream()">Grab video & start recording</button></p>
-        <p><button onclick="stopRecordingAndSaveToCache()">Stop & Save to Cache</button></p>
-        <p><button onclick="downloadFromCache()">Download Video from Cache</button></p>
+        <!-- Button container with flex display -->
+        <div class="container">
+            <button onclick="getStream()">Grab video & start recording</button>
+            <button onclick="stopRecordingAndSaveToCache()">Stop & Save to Cache</button>
+            <button onclick="downloadFromCache()">Download Video from Cache</button>
+        </div>
 
         <div class="container">
             <p>Current permission status is <b id="status">unavailable</b>.</p>
@@ -259,7 +266,8 @@
             </div>
         </div>
 
-        <ul id="target4"></ul>
+     
+ <ul id="target4"></ul>
     </main>
     <script src="js/app.js"></script>
 </body>
