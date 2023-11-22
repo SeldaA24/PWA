@@ -74,17 +74,19 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
-    <!-- ios support -->
+    <!-- iOS support -->
     <meta name="apple-mobile-web-app-status-bar" content="#db4938">
     <meta name="theme-color" content="#db4938">
     <title>PWA Sample</title>
 </head>
+
 <body>
     <main>
         <nav>
@@ -104,77 +106,83 @@
             <p>Current permission status is <b id="status">unavailable</b>.</p>
             <p><button onclick="requestPermission()">Request permission</button></p>
             <p><button onclick="nonPersistentNotification()">Non-persistent notification</button></p>
-            <p><button onclick="persistentNotification()">Persistent notification</button></p> 
-          <!-- Praktikum 2 -->
-          <p><b>Praktikum 2</b></p>
-          <button id="askButton">Ask for location</button>
-          <table>
-  <tr>
-    <td>API used</td>
-    <td id="moApi"></td>
-  </tr>
-  <tr>
-    <td>linear acceleration (excl. gravity)</td>
-    <td id="moAccel"></td>
-  </tr>
-  <tr>
-    <td>acceleration incl. gravity</td>
-    <td id="moAccelGrav"></td>
-  </tr>
-  <tr>
-    <td>rotation rate</td>
-    <td id="moRotation"></td>
-  </tr>
-  <tr>
-    <td>interval (ms)</td>
-    <td id="moInterval"></td>
-  </tr>
-</table>
-
-<p><small>Demo based on <a href="https://www.html5rocks.com/en/tutorials/device/orientation/" target="_blank" rel="noopener">HTML5 Rocks</a> article.</small></p>
-
-<div id="target"></div>
+            <p><button onclick="persistentNotification()">Persistent notification</button></p>
         </div>
+
+        <!-- Praktikum 2 -->
+        <p><b>Praktikum 2</b></p>
+        <button id="askButton">Ask for location</button>
+        <table>
+            <tr>
+                <td>API used</td>
+                <td id="moApi"></td>
+            </tr>
+            <tr>
+                <td>linear acceleration (excl. gravity)</td>
+                <td id="moAccel"></td>
+            </tr>
+            <tr>
+                <td>acceleration incl. gravity</td>
+                <td id="moAccelGrav"></td>
+            </tr>
+            <tr>
+                <td>rotation rate</td>
+                <td id="moRotation"></td>
+            </tr>
+            <tr>
+                <td>interval (ms)</td>
+                <td id="moInterval"></td>
+            </tr>
+        </table>
+
+        <div id="target2"></div>
+
+        <!-- Praktikum 3 -->
+        <p><b>Praktikum 3</b></p>
+        <p>Estimated storage usage is <b id="usage">unknown</b> bytes.</p>
+        <p>Estimated storage quota is <b id="quota">unknown</b> bytes.</p>
+        <p>Estimated usage is <b id="percent">unknown</b>%.</p>
+        <p>Persistent storage status is <b id="persisted">unknown</b>.</p>
+        <p><button onclick="requestPersistence()">Request persistent storage</button></p>
+
+        <p>
+            <label>Engine</label>
+        </p>
+        <div role="group" id="selectEngine">
+            <input type="radio" name="engine" value="localStorage" checked /> Persistent Storage
+            <input type="radio" name="engine" value="sessionStorage" /> Per-Session Storage
+        </div>
+
+        <p>
+            <label for="value">Value for <code>myKey</code></label>
+            <input type="text" id="value">
+        </p>
+
+        <p>Open the example in another tab and change the value there to see the synchronization via <code>storage</code>
+            event.</p>
+
+        <div id="target3"></div>
+
+        <div class="columns">
+            <div class="column">
+                <button class="btn-file">
+                    Choose some files to read<br>(File API) <input type="file" onchange="readFiles(this.files)"
+                        multiple>
+                </button>
+
+                <p>Number of selected files: <b id="count">N/A</b></p>
+            </div>
+            <div class="column">
+                <button class="btn-file" onclick="writeFile()">
+                    Choose file to create or overwrite<br>(Native File System API)
+                </button>
+            </div>
+        </div>
+
+        <ul id="target4"></ul>
     </main>
     <script src="js/app.js"></script>
 </body>
+
 </html>
-          <!-- Praktikum 3 -->
-          <p><b>Praktikum 3</b></p>
-<p>Estimated storage usage is <b id="usage">unknown</b> bytes.</p>
-<p>Estimated storage quota is <b id="quota">unknown</b> bytes.</p>
-<p>Estimated usage is <b id="percent">unknown</b>%.</p>
-<p>Persistent storage status is <b id="persisted">unknown</b>.</p>
-<p><button onclick="requestPersistence()">Request persistent storage</button></p>
 
-<p>
-  <label>Engine</label>
-</p>
-<div role="group" id="selectEngine">
-  <input type="radio" name="engine" value="localStorage" checked/> Persistent Storage
-  <input type="radio" name="engine" value="sessionStorage"/> Per-Session Storage
-</div>
-
-<p>
-  <label for="value">Value for <code>myKey</code></label>
-  <input type="text" id="value">
-</p>
-
-<p>Open the example in another tab and change the value there to see the synchronization via <code>storage</code> event.</p>
-<div id="target"></div
-<div class="columns">
-  <div class="column">
-    <button class="btn-file">
-      Choose some files to read<br>(File API) <input type="file" onchange="readFiles(this.files)" multiple>
-    </button>
-    
-    <p>Number of selected files: <b id="count">N/A</b></p>
-  </div>
-  <div class="column">
-    <button class="btn-file" onclick="writeFile()">
-      Choose file to create or overwrite<br>(Native File System API)
-    </button>
-  </div>
-</div>
-
-<ul id="target"></ul>
