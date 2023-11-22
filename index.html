@@ -85,6 +85,84 @@
     <meta name="apple-mobile-web-app-status-bar" content="#db4938">
     <meta name="theme-color" content="#db4938">
     <title>PWA Sample</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #db4938;
+            color: white;
+            padding: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav li {
+            display: inline;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        video {
+            height: 180px;
+            width: 240px;
+        }
+
+        button {
+            background-color: #db4938;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .container p {
+            flex: 1;
+        }
+
+        .container button {
+            flex: 0 0 auto;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #db4938;
+        }
+
+        .columns {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .column {
+            flex: 1;
+        }
+    </style>
 </head>
 
 <body>
@@ -97,11 +175,13 @@
                 <li>Blog</li>
             </ul>
         </nav>
-        <video autoplay style="height:180px; width: 240px;" poster="https://image.freepik.com/free-icon/video-camera-symbol_318-40225.png"></video>
+
+        <video poster="https://image.freepik.com/free-icon/video-camera-symbol_318-40225.png"></video>
+
         <p><button onclick="getStream()">Grab video & start recording</button></p>
-        <!-- Updated button for stopping the recording and saving to cache -->
         <p><button onclick="stopRecordingAndSaveToCache()">Stop & Save to Cache</button></p>
         <p><button onclick="downloadFromCache()">Download Video from Cache</button></p>
+
         <div class="container">
             <p>Current permission status is <b id="status">unavailable</b>.</p>
             <p><button onclick="requestPermission()">Request permission</button></p>
@@ -185,4 +265,3 @@
 </body>
 
 </html>
-
