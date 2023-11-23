@@ -180,9 +180,9 @@
             </ul>
         </nav>
 
-      <video style="height:180px; width: 240px;" poster="https://image.freepik.com/free-icon/video-camera-symbol_318-40225.png"></video>
-
+    
         <div class="container">
+                  <video autoplay style="height:180px; width: 240px;" poster="https://image.freepik.com/free-icon/video-camera-symbol_318-40225.png"></video>
             <button onclick="getStream()">Grab video & start recording</button>
             <button onclick="stopRecordingAndSaveToCache()">Stop & Save to Cache</button>
             <button onclick="downloadFromCache()">Download Video from Cache</button>
@@ -258,7 +258,7 @@
         <div class="columns">
             <div class="column">
                 <button class="btn-file">
-                    Choose some files to read<br>(File API) <input type="file" onchange="readFiles(this.files)"
+                    Choose files to read<br>(File API) <input type="file" onchange="readFiles(this.files)"
                         multiple>
                 </button>
 
