@@ -446,6 +446,10 @@
     <label for="amount">Wert der Transaktion:</label>
     <input type="number" id="amount" required>
 
+    <!-- Neue Eingabe für den Kontostand -->
+    <label for="balance">Kontostand:</label>
+    <input type="number" id="balance" value="2000" disabled>
+
     <button type="button" onclick="addExpense()">Eintrag hinzufügen</button>
 </form>
 
@@ -456,20 +460,22 @@
             <th>Datum</th>
             <th>Kategorie</th>
             <th>Wert der Transaktion</th>
+            <th>Kontostand</th>
         </tr>
     </thead>
     <tbody id="expenseList">
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="3" id="total">Gesamtsumme:</td>
-            <td id="balance">0</td>
+            <td colspan="4" id="total">Gesamtsumme:</td>
+            <td id="currentBalance">2000.00</td>
         </tr>
     </tfoot>
 </table>
 
 <script>
     let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+    let currentBalance = 2000; // Startwert für den Kontostand
 
     function addExpense() {
         const description = document.getElementById('description').value;
@@ -479,9 +485,13 @@
 
         if (description && date && category && !isNaN(amount)) {
             expenses.push({ description, date, category, amount });
-            saveToLocalStorage();  // Speichern Sie die Daten nach dem Hinzufügen
+            saveToLocalStorage();  
             updateTable();
             clearForm();
+
+            // Aktualisiere den Kontostand basierend auf der Transaktion
+            currentBalance += amount;
+            document.getElementById('currentBalance').textContent = currentBalance.toFixed(2);
         } else {
             alert('Bitte füllen Sie alle Felder korrekt aus.');
         }
@@ -490,12 +500,9 @@
     function updateTable() {
         const tableBody = document.getElementById('expenseList');
         const totalElement = document.getElementById('total');
-        const balanceElement = document.getElementById('balance');
 
-        // Clear previous entries
         tableBody.innerHTML = '';
 
-        // Populate table with expenses
         let totalAmount = 0;
         expenses.forEach(expense => {
             const row = tableBody.insertRow();
@@ -507,9 +514,8 @@
             totalAmount += expense.amount;
         });
 
-        // Update total and balance
         totalElement.textContent = 'Gesamtsumme:';
-        balanceElement.textContent = totalAmount.toFixed(2);
+        document.getElementById('currentBalance').textContent = currentBalance.toFixed(2);
     }
 
     function saveToLocalStorage() {
@@ -523,43 +529,8 @@
         document.getElementById('amount').value = '';
     }
 
-    // Initialisieren der Tabelle beim Laden der Seite
     updateTable();
-
-  function calculateBalance() {
-        let totalBalance = 0;
-        expenses.forEach(expense => {
-            totalBalance += expense.amount;
-        });
-        return totalBalance;
-    }
-
-    function updateTable() {
-        const tableBody = document.getElementById('expenseList');
-        const totalElement = document.getElementById('total');
-        const balanceElement = document.getElementById('balance');
-
-        // Clear previous entries
-        tableBody.innerHTML = '';
-
-        // Populate table with expenses
-        let totalAmount = 0;
-        expenses.forEach(expense => {
-            const row = tableBody.insertRow();
-            row.insertCell(0).textContent = expense.description;
-            row.insertCell(1).textContent = expense.date;
-            row.insertCell(2).textContent = expense.category;
-            row.insertCell(3).textContent = expense.amount.toFixed(2);
-
-            totalAmount += expense.amount;
-        });
-
-        // Update total and balance
-        totalElement.textContent = 'Gesamtsumme:';
-        balanceElement.textContent = calculateBalance().toFixed(2);
-    }
 </script>
-
 
 
   
