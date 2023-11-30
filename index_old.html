@@ -469,7 +469,7 @@
 </table>
 
 <script>
-    let expenses = [];
+    let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 
     function addExpense() {
         const description = document.getElementById('description').value;
@@ -479,6 +479,7 @@
 
         if (description && date && category && !isNaN(amount)) {
             expenses.push({ description, date, category, amount });
+            saveToLocalStorage();  // Speichern Sie die Daten nach dem Hinzufügen
             updateTable();
             clearForm();
         } else {
@@ -510,14 +511,6 @@
         totalElement.textContent = 'Gesamtsumme:';
         balanceElement.textContent = totalAmount.toFixed(2);
     }
-
-    function clearForm() {
-        document.getElementById('description').value = '';
-        document.getElementById('date').value = '';
-        document.getElementById('category').value = '';
-        document.getElementById('amount').value = '';
-    }
-  }
 
     function saveToLocalStorage() {
         localStorage.setItem('expenses', JSON.stringify(expenses));
