@@ -407,6 +407,99 @@
             });
         }
     </script>
+
+
+<h1>Kosten-Tracker</h1>
+
+<form id="expenseForm">
+    <label for="description">Beschreibung:</label>
+    <input type="text" id="description" required>
+
+    <label for="date">Datum:</label>
+    <input type="date" id="date" required>
+
+    <label for="category">Kategorie:</label>
+    <input type="text" id="category" required>
+
+    <label for="amount">Wert der Transaktion:</label>
+    <input type="number" id="amount" required>
+
+    <button type="button" onclick="addExpense()">Eintrag hinzufügen</button>
+</form>
+
+<table id="expenseTable">
+    <thead>
+        <tr>
+            <th>Beschreibung</th>
+            <th>Datum</th>
+            <th>Kategorie</th>
+            <th>Wert der Transaktion</th>
+        </tr>
+    </thead>
+    <tbody id="expenseList">
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" id="total">Gesamtsumme:</td>
+            <td id="balance">0</td>
+        </tr>
+    </tfoot>
+</table>
+
+<script>
+    let expenses = [];
+
+    function addExpense() {
+        const description = document.getElementById('description').value;
+        const date = document.getElementById('date').value;
+        const category = document.getElementById('category').value;
+        const amount = parseFloat(document.getElementById('amount').value);
+
+        if (description && date && category && !isNaN(amount)) {
+            expenses.push({ description, date, category, amount });
+            updateTable();
+            clearForm();
+        } else {
+            alert('Bitte füllen Sie alle Felder korrekt aus.');
+        }
+    }
+
+    function updateTable() {
+        const tableBody = document.getElementById('expenseList');
+        const totalElement = document.getElementById('total');
+        const balanceElement = document.getElementById('balance');
+
+        // Clear previous entries
+        tableBody.innerHTML = '';
+
+        // Populate table with expenses
+        let totalAmount = 0;
+        expenses.forEach(expense => {
+            const row = tableBody.insertRow();
+            row.insertCell(0).textContent = expense.description;
+            row.insertCell(1).textContent = expense.date;
+            row.insertCell(2).textContent = expense.category;
+            row.insertCell(3).textContent = expense.amount.toFixed(2);
+
+            totalAmount += expense.amount;
+        });
+
+        // Update total and balance
+        totalElement.textContent = 'Gesamtsumme:';
+        balanceElement.textContent = totalAmount.toFixed(2);
+    }
+
+    function clearForm() {
+        document.getElementById('description').value = '';
+        document.getElementById('date').value = '';
+        document.getElementById('category').value = '';
+        document.getElementById('amount').value = '';
+    }
+</script>
+
+
+
+  
 </body>
 
 </html>
