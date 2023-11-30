@@ -525,6 +525,39 @@
 
     // Initialisieren der Tabelle beim Laden der Seite
     updateTable();
+
+  function calculateBalance() {
+        let totalBalance = 0;
+        expenses.forEach(expense => {
+            totalBalance += expense.amount;
+        });
+        return totalBalance;
+    }
+
+    function updateTable() {
+        const tableBody = document.getElementById('expenseList');
+        const totalElement = document.getElementById('total');
+        const balanceElement = document.getElementById('balance');
+
+        // Clear previous entries
+        tableBody.innerHTML = '';
+
+        // Populate table with expenses
+        let totalAmount = 0;
+        expenses.forEach(expense => {
+            const row = tableBody.insertRow();
+            row.insertCell(0).textContent = expense.description;
+            row.insertCell(1).textContent = expense.date;
+            row.insertCell(2).textContent = expense.category;
+            row.insertCell(3).textContent = expense.amount.toFixed(2);
+
+            totalAmount += expense.amount;
+        });
+
+        // Update total and balance
+        totalElement.textContent = 'Gesamtsumme:';
+        balanceElement.textContent = calculateBalance().toFixed(2);
+    }
 </script>
 
 
