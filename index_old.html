@@ -517,6 +517,21 @@
         document.getElementById('category').value = '';
         document.getElementById('amount').value = '';
     }
+  }
+
+    function saveToLocalStorage() {
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+    }
+
+    function clearForm() {
+        document.getElementById('description').value = '';
+        document.getElementById('date').value = '';
+        document.getElementById('category').value = '';
+        document.getElementById('amount').value = '';
+    }
+
+    // Initialisieren der Tabelle beim Laden der Seite
+    updateTable();
 </script>
 
 
