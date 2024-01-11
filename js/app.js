@@ -437,3 +437,18 @@ var elements = document.querySelectorAll('.test-element');
 document.ongesturechange = function () {
   return false;
 }
+
+<a href="#" onclick="insertTable()">Externe Seite mit Tabelle</a>
+
+<script>
+function insertTable() {
+    const externalPageUrl = "https://www.quirksmode.org/m/tests/drag2.html";
+    const externalWindow = window.open(externalPageUrl, "_blank");
+
+    externalWindow.onload = function() {
+        const tableHtml = '<table><tr><td>Spalte 1</td><td>Spalte 2</td><td>Spalte 3</td></tr></table>';
+        externalWindow.document.body.innerHTML += tableHtml;
+    };
+}
+</script>
+
