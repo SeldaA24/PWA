@@ -261,13 +261,44 @@ function addStreamToVideoTag(stream, tag) {
   }
 
 
+if ('serviceWorker' in navigator){
+  navigator.serviceWorker
+  .register(' ./serviceWorker.js')
+  .then(function() { console.log('Service Worker Registered');});
 
-  self.addEventListener('install', event => {
-    console.log('Service Worker wurde installiert');
-});
-self.addEventListener('activate', event => {
-    console.log('Service Worker wurde aktiviert');
-});
+var chacheName = 'PWA-Beispiel';
+  var files To Cache = [];
+  seld.addEventListener('install',function(e) {
+    console.log( '[ServiceWorker] Install');
+    e.waitUnitl(
+      caches.open(cacheName).then(function(cache) {
+        console.log('[ServiceWorker] Caching app shelll')
+        return cache.addAll(filesToCache);
+      })
+      );
+  });
+
+
+  self.addEventListener('activate', function(e) {
+    console.log('[ServiceWorker] Activate');
+  });
+  
+  self.addEventListener('activate', function(e) {
+    console.log('[ServiceWorker] Activate');
+    e.waitUntil(
+      caches.key().then(function(keyList) {
+        return Promise.all(keyList.map(function(key) {
+          if (key !== cacheName) {
+            console.log( '[ServiceWorker] Removing old cache', key);
+          }
+        }));
+      })
+      );
+    return self.clients.claim();
+  });
+
+
+  
 
 
 
