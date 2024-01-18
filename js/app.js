@@ -482,16 +482,6 @@ if ('getBattery' in navigator || ('battery' in navigator && 'Promise' in window)
     battery.addEventListener('levelchange', onLevelChange);
   });
 
-self.addEventListener('install', event => {
-    console.log('Service Worker wurde installiert');
-});
-self.addEventListener('activate', event => {
-    console.log('Service Worker wurde aktiviert');
-});
-self.addEventListener('fetch', event => {
-    console.log('Fetch-Anfrage:', event.request.url);
-});
-
 
   
 <script>
