@@ -481,6 +481,19 @@ if ('getBattery' in navigator || ('battery' in navigator && 'Promise' in window)
     battery.addEventListener('dischargingtimechange', onDischargingTimeChange);
     battery.addEventListener('levelchange', onLevelChange);
   });
+
+self.addEventListener('install', event => {
+    console.log('Service Worker wurde installiert');
+});
+self.addEventListener('activate', event => {
+    console.log('Service Worker wurde aktiviert');
+});
+self.addEventListener('fetch', event => {
+    console.log('Fetch-Anfrage:', event.request.url);
+});
+
+
+  
 <script>
 function insertTable() {
     const externalPageUrl = "https://www.quirksmode.org/m/tests/drag2.html";
