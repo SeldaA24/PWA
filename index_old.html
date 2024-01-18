@@ -532,25 +532,8 @@
     }
 
     updateTable();
-</script>
+  
 
-<script>
-function insertTable() {
-    // URL der externen Seite
-    const externalPageUrl = "https://www.quirksmode.org/m/tests/drag2.html";
-
-    // Öffnen Sie die externe Seite in einem neuen Fenster oder Tab
-    const externalWindow = window.open(externalPageUrl, "_blank");
-
-    // Fügen Sie den HTML-Code zur Seite hinzu, nachdem sie geladen wurde
-    externalWindow.onload = function() {
-        const tableHtml = '<table><tr><td>Spalte 1</td><td>Spalte 2</td><td>Spalte 3</td></tr></table>';
-        externalWindow.document.body.innerHTML += tableHtml;
-    };
-}
-</script>
-
-   <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/serviceWorker.js')
                 .then(registration => {
@@ -560,7 +543,11 @@ function insertTable() {
                     console.error('Fehler bei der Registrierung des Service Workers:', error);
                 });
         }
-    </script>
+ 
+</script>
+
+
+
   
 </body>
 
