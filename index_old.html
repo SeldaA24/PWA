@@ -534,7 +534,7 @@
     updateTable();
   
 
-        if ('serviceWorker' in navigator) {
+ if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/serviceWorker.js')
                 .then(registration => {
                     console.log('Service Worker registriert:', registration);
@@ -542,8 +542,15 @@
                 .catch(error => {
                     console.error('Fehler bei der Registrierung des Service Workers:', error);
                 });
+        } else {
+            console.error('Der Browser unterstützt keine Service Worker.');
         }
- 
+
+
+
+
+
+  
 </script>
 
 
