@@ -549,6 +549,18 @@ function insertTable() {
     };
 }
 </script>
+
+   <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('Service Worker registriert:', registration);
+                })
+                .catch(error => {
+                    console.error('Fehler bei der Registrierung des Service Workers:', error);
+                });
+        }
+    </script>
   
 </body>
 
