@@ -446,7 +446,7 @@ document.ongesturechange = function () {
   return false;
 }
 
-<a href="#" onclick="insertTable()">Externe Seite mit Tabelle</a>
+//<a href="#" onclick="insertTable()">Externe Seite mit Tabelle</a>
 if ('getBattery' in navigator || ('battery' in navigator && 'Promise' in window)) {
   var target = document.getElementById('target');
 
