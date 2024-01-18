@@ -273,6 +273,7 @@ var chacheName = 'PWA-Beispiel';
     e.waitUnitl(
       caches.open(cacheName).then(function(cache) {
         console.log('[ServiceWorker] Caching app shelll')
+         console.log('[ServiceWorker] Installed')
         return cache.addAll(filesToCache);
       })
       );
@@ -283,19 +284,6 @@ var chacheName = 'PWA-Beispiel';
     console.log('[ServiceWorker] Activate');
   });
   
-  self.addEventListener('activate', function(e) {
-    console.log('[ServiceWorker] Activate');
-    e.waitUntil(
-      caches.key().then(function(keyList) {
-        return Promise.all(keyList.map(function(key) {
-          if (key !== cacheName) {
-            console.log( '[ServiceWorker] Removing old cache', key);
-          }
-        }));
-      })
-      );
-    return self.clients.claim();
-  });
 
 
   
